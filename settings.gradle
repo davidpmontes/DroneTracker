@@ -1,0 +1,2 @@
+rootProject.name='DroneTracker2'
+include ':app'
