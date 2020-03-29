@@ -16,16 +16,16 @@ import com.example.dronetracker2.R;
 
 public class ServerFragment extends Fragment {
 
-    private ServerViewModel notificationsViewModel;
+    private ServerViewModel serverViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
+        serverViewModel =
                 ViewModelProviders.of(this).get(ServerViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_map, container, false);
+        View root = inflater.inflate(R.layout.fragment_server, container, false);
 
         final TextView textView = root.findViewById(R.id.text_login);
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        serverViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
