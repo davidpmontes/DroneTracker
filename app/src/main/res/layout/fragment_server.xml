@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.server.ServerFragment"
+    android:background="#3800B3">
+
+    <TextView
+        android:id="@+id/text_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textAlignment="center"
+        android:textSize="60sp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_server"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_background"
+        android:drawableStart="@drawable/ic_cloud_black_24dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:drawablePadding="10dp"
+        android:textSize="20sp"
+        android:hint="Server"
+        android:textColorHint="#B6B6B6"
+        android:textColor="#FFFFFF"
+        android:padding="10dp"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/text_login" />
+
+    <EditText
+        android:id="@+id/edit_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_background"
+        android:drawableStart="@drawable/ic_account_circle_black_24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:drawablePadding="10dp"
+        android:textSize="20sp"
+        android:hint="Username"
+        android:textColorHint="#B6B6B6"
+        android:textColor="#FFFFFF"
+        android:padding="10dp"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/edit_server" />
+
+    <EditText
+        android:id="@+id/edit_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_edit_background"
+        android:drawableStart="@drawable/ic_lock_black_24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:drawablePadding="10dp"
+        android:textSize="20sp"
+        android:hint="Password"
+        android:textColorHint="#B6B6B6"
+        android:textColor="#FFFFFF"
+        android:padding="10dp"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@+id/edit_username" />
+
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/login_button_background"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:textAlignment="center"
+        android:text="Login"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_password" />
+</androidx.constraintlayout.widget.ConstraintLayout>
