@@ -2,29 +2,93 @@ package com.example.dronetracker2;
 
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.dronetracker2.ui.details.DetailsFragment;
+import com.example.dronetracker2.ui.home.HomeFragment;
+import com.example.dronetracker2.ui.map.MapFragment;
+import com.example.dronetracker2.ui.server.ServerFragment;
+import com.google.android.material.tabs.TabLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Toolbar toolbar;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
+    private HomeFragment fragmentHome;
+    private ServerFragment fragmentServer;
+    private MapFragment fragmentMap;
+    private DetailsFragment fragmentDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_server, R.id.navigation_map, R.id.navigation_details)
-                .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(navView, navController);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        viewPager = findViewById(R.id.page_viewer);
+        tabLayout = findViewById(R.id.tab_layout);
+
+        createFragments();
+
+        fragmentMap.DoSomething();
     }
 
+    private class ViewPagerAdapter extends FragmentPagerAdapter {
+        private List<Fragment> fragments = new ArrayList<>();
+        private List<String> fragmentTitle = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragments.add(fragment);
+            fragmentTitle.add(title);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            return fragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitle.get(position);
+        }
+    }
+
+    private void createFragments() {
+        fragmentHome = new HomeFragment();
+        fragmentServer = new ServerFragment();
+        fragmentMap = new MapFragment();
+        fragmentDetails = new DetailsFragment();
+
+        tabLayout.setupWithViewPager(viewPager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
+        viewPagerAdapter.addFragment(fragmentHome, "Home");
+        viewPagerAdapter.addFragment(fragmentServer, "Server");
+        viewPagerAdapter.addFragment(fragmentMap, "Map");
+        viewPagerAdapter.addFragment(fragmentDetails, "Details");
+
+        viewPager.setAdapter(viewPagerAdapter);
+    }
 }

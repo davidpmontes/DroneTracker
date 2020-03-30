@@ -1,16 +1,15 @@
 package com.example.dronetracker2.ui.map;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.example.dronetracker2.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +23,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapViewModel mapViewModel;
     private View myview;
     private MapView mapView;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 
     @Nullable
     @Override
@@ -54,5 +63,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         googleMap.addMarker(new MarkerOptions().position(marker).title("Marker in San Jose"));
 
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+    }
+
+    public void DoSomething()
+    {
+        Log.d("Map", "I am a map");
     }
 }
