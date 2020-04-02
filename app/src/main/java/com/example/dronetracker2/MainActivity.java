@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private ServerFragment fragmentServer;
     private MapFragment fragmentMap;
     private DetailsFragment fragmentDetails;
+    private HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                     DroneData[] mcArray = gson.fromJson(body, DroneData[].class);
                     List<DroneData> datafeed = Arrays.asList(mcArray);
 
-                    HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap = new HashMap<>();
+                    //HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap = new HashMap<>();
 
                     int datafeedSize = datafeed.size()-1;
                     int operationVolumesSize = 0;
@@ -121,11 +123,25 @@ public class MainActivity extends AppCompatActivity {
                         Log.i("hashMap",gufi.toString() + " " + hashMap.get(gufi).toString());
                     }*/
 
-                    fragmentMap.DoSomething(hashMap);
+
+
+                    /*int value = fragmentMap.DoSomething(hashMap);
+                    while(value == -1){
+                        try {
+                            Thread.sleep(1000);
+                            value = fragmentMap.DoSomething(hashMap);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }*/
                 }
             }
         });
 
+    }
+
+    public void isMapReady(){
+        fragmentMap.DoSomething(hashMap);
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {

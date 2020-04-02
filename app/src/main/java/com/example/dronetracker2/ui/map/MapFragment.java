@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.dronetracker2.MainActivity;
 import com.example.dronetracker2.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -65,15 +66,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-        LatLng marker = new LatLng(37.3354550, -121.8850220);
+        LatLng marker = new LatLng(39.52721586111111, -119.81009614166666);
 
         gMap.addMarker(new MarkerOptions().position(marker).title("Marker in San Jose"));
 
-        gMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+        gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker,15));
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.isMapReady();
+
     }
 
-    public void DoSomething(HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap) {
-        gMap.clear();
+    public int DoSomething(HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap) {
+        if(gMap == null){
+            return -1;
+        }
+        //gMap.clear();
         //Log.i("doSomething", "I am a map");
         for (String gufi : hashMap.keySet()) {
             Log.i("hashMap",gufi.toString() + " " + hashMap.get(gufi).toString());
@@ -97,5 +104,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
 
         }
+        return 0;
     }
 }
