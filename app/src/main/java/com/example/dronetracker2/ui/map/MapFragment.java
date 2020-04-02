@@ -1,6 +1,7 @@
 package com.example.dronetracker2.ui.map;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +19,16 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolygonOptions;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapViewModel mapViewModel;
     private View myview;
     private MapView mapView;
+    private GoogleMap gMap;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -58,15 +64,38 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
     public void onMapReady(GoogleMap googleMap) {
+        gMap = googleMap;
         LatLng marker = new LatLng(37.3354550, -121.8850220);
 
-        googleMap.addMarker(new MarkerOptions().position(marker).title("Marker in San Jose"));
+        gMap.addMarker(new MarkerOptions().position(marker).title("Marker in San Jose"));
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
+        gMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
     }
 
-    public void DoSomething()
-    {
-        Log.d("Map", "I am a map");
+    public void DoSomething(HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap) {
+        gMap.clear();
+        //Log.i("doSomething", "I am a map");
+        for (String gufi : hashMap.keySet()) {
+            Log.i("hashMap",gufi.toString() + " " + hashMap.get(gufi).toString());
+            ArrayList<ArrayList<LatLng>> LFGP = hashMap.get(gufi);
+            //Log.i("LFGP",LFGP.toString());
+            for(int LFGPIndex = 0; LFGPIndex<LFGP.size();  LFGPIndex++){
+                Log.i("LFGP",LFGP.get(LFGPIndex).toString());
+                ArrayList<LatLng> fGP = LFGP.get(LFGPIndex);
+                PolygonOptions poly = new PolygonOptions();
+                poly.fillColor(Color.GRAY);
+                for(int fGPIndex = 0; fGPIndex<fGP.size(); fGPIndex++){
+                    Log.i("fGP",fGP.get(fGPIndex).toString());
+                    Double lat = fGP.get(fGPIndex).latitude;
+                    Double lng = fGP.get(fGPIndex).longitude;
+                    LatLng latLng = new LatLng(lat,lng);
+                    poly.add(latLng);
+                    Log.i("latlng", lat.toString() + " " + lng.toString());
+
+                }
+                gMap.addPolygon(poly);
+            }
+
+        }
     }
 }

@@ -7,6 +7,7 @@ import com.example.dronetracker2.ui.details.DetailsFragment;
 import com.example.dronetracker2.ui.home.HomeFragment;
 import com.example.dronetracker2.ui.map.MapFragment;
 import com.example.dronetracker2.ui.server.ServerFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,8 +21,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.Call;
@@ -53,10 +56,11 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
 
         createFragments();
+        //fragmentMap.DoSomething();
 
         fetchJson();
 
-        fragmentMap.DoSomething();
+
     }
 
     private void fetchJson(){
@@ -79,22 +83,45 @@ public class MainActivity extends AppCompatActivity {
 
                     Gson gson = new GsonBuilder().create();
 
-                    List<DroneData> datafeed = Arrays.asList(gson.fromJson(body,DroneData[].class));
-                    Log.i("datafeed", datafeed.toString());
+                    DroneData[] mcArray = gson.fromJson(body, DroneData[].class);
+                    List<DroneData> datafeed = Arrays.asList(mcArray);
 
-                    int dataFeedSize = datafeed.size()-1;
-                    Log.i("datafeedSize", Integer.toString(dataFeedSize));
+                    HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap = new HashMap<>();
 
-                    //datafeed.get(0);
-                    Log.i("datafeedSize",datafeed.get(0).MessageAOLFlightPlan.gufi.toString());
-
-
+                    int datafeedSize = datafeed.size()-1;
+                    int operationVolumesSize = 0;
+                    int coordinatesArray = 0;
 
 
-                    /*for(int dataFeedIndex = 0; dataFeedIndex<=dataFeedSize; dataFeedIndex++){
-                        String gufi = datafeed.get(dataFeedIndex).MessageAOLFlightPlan.gufi;
-                        Log.i("guif",gufi);
+                    for(int datafeedIndex = 0; datafeedIndex<=datafeedSize; datafeedIndex++){
+                        ArrayList<ArrayList<LatLng>> ListFlightGeographyPolygon = new ArrayList<ArrayList<LatLng>>();
+                        String gufi = datafeed.get(datafeedIndex).MessageAolFlightPlan.gufi;
+                        operationVolumesSize = datafeed.get(datafeedIndex).MessageAolFlightPlan.operation_volumes.size()-1;
+                        for(int operationVolumesIndex = 0; operationVolumesIndex<=operationVolumesSize; operationVolumesIndex++){
+                            coordinatesArray = datafeed.get(datafeedIndex).MessageAolFlightPlan.operation_volumes.
+                                    get(operationVolumesIndex).flight_geography.coordinates.get(0).size()-1;
+                            ArrayList<LatLng> flightGeographyPolygon = new ArrayList<>();
+                            for(int coordinatesArrayIndex=0; coordinatesArrayIndex<=coordinatesArray; coordinatesArrayIndex++){
+                                List<Double> coordinates = datafeed.get(datafeedIndex).MessageAolFlightPlan.
+                                        operation_volumes.get(operationVolumesIndex)
+                                        .flight_geography.coordinates.get(0).get(coordinatesArrayIndex);
+
+                                Double lat = coordinates.get(1);
+                                Double lng = coordinates.get(0);
+                                LatLng latLng = new LatLng(lat,lng);
+                                flightGeographyPolygon.add(latLng);
+                            }
+                            ListFlightGeographyPolygon.add(flightGeographyPolygon);
+                        }
+                        hashMap.put(gufi,ListFlightGeographyPolygon);
+                    }
+
+                    /*for (String gufi : hashMap.keySet()) {
+                        //Log.i("hashMap", "Element at key $objectName : ${hashMap[objectName]}");
+                        Log.i("hashMap",gufi.toString() + " " + hashMap.get(gufi).toString());
                     }*/
+
+                    fragmentMap.DoSomething(hashMap);
                 }
             }
         });
@@ -149,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 }
 
 class DroneData{
-    MessageAOLFlightPlan MessageAOLFlightPlan;
+    MessageAOLFlightPlan MessageAolFlightPlan;
 }
 
 class MessageAOLFlightPlan{
@@ -160,7 +187,7 @@ class MessageAOLFlightPlan{
     ControllerLocation controller_location;
     GCSLocation gcs_location;
     MetaData metaData;
-    List<Float> lla;
+    List<Double> lla;
 }
 
 class OperationVolume{
