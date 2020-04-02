@@ -56,7 +56,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    @Override
+
     public void onMapReady(GoogleMap googleMap) {
         LatLng marker = new LatLng(37.3354550, -121.8850220);
 
