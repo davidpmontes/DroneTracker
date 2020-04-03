@@ -1,7 +1,10 @@
 package com.example.dronetracker2.ui.map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.dronetracker2.MainActivity;
@@ -18,6 +22,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
@@ -68,7 +74,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         gMap = googleMap;
         LatLng marker = new LatLng(39.52721586111111, -119.81009614166666);
 
-        gMap.addMarker(new MarkerOptions().position(marker).title("Marker in San Jose"));
+        //gMap.addMarker(new MarkerOptions().position(marker).title("Marker in San Jose"));
 
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker,15));
         MainActivity mainActivity = (MainActivity) getActivity();
@@ -80,7 +86,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if(gMap == null){
             return -1;
         }
-        //gMap.clear();
+        gMap.clear();
         //Log.i("doSomething", "I am a map");
         for (String gufi : hashMap.keySet()) {
             Log.i("hashMap",gufi.toString() + " " + hashMap.get(gufi).toString());
@@ -105,5 +111,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         }
         return 0;
+    }
+
+    public void DoSomethingTwo(ArrayList<LatLng> aircraftPosition){
+        for (LatLng latLng : aircraftPosition) {
+            //Log.i("hashMap", "Element at key $objectName : ${hashMap[objectName]}");
+            //Log.i("aircraftPosition",latLng.toString());
+            //Double lat = latLng.latitude;
+            //Double lng = latLng.longitude;
+            gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_flight_black_24dp)));
+        }
+    }
+
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

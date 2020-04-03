@@ -20,6 +20,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -44,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment fragmentMap;
     private DetailsFragment fragmentDetails;
     private HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap = new HashMap<>();
+    private ArrayList<LatLng> aircraftPosition  = new ArrayList<LatLng>();
+
 
 
     @Override
@@ -61,9 +65,12 @@ public class MainActivity extends AppCompatActivity {
         //fragmentMap.DoSomething();
 
         fetchJson();
+        fetchJsonTwo();
 
 
     }
+
+
 
     private void fetchJson(){
         OkHttpClient client = new OkHttpClient();
@@ -122,18 +129,50 @@ public class MainActivity extends AppCompatActivity {
                         //Log.i("hashMap", "Element at key $objectName : ${hashMap[objectName]}");
                         Log.i("hashMap",gufi.toString() + " " + hashMap.get(gufi).toString());
                     }*/
+                }
+            }
+        });
 
+    }
 
+    private void fetchJsonTwo() {
+        OkHttpClient client = new OkHttpClient();
+        String url ="http://10.0.2.2:3000/aircraft";
+        Request request = new Request.Builder().url(url).build();
 
-                    /*int value = fragmentMap.DoSomething(hashMap);
-                    while(value == -1){
-                        try {
-                            Thread.sleep(1000);
-                            value = fragmentMap.DoSomething(hashMap);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.i("fail", "fail");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    String body = response.body().string();
+                    //Log.i("myResponse2", body);
+                    Gson gson = new GsonBuilder().create();
+
+                    DroneData[] mcArray = gson.fromJson(body, DroneData[].class);
+                    List<DroneData> datafeed = Arrays.asList(mcArray);
+                    for(int i =0; i<datafeed.size();i++){
+                        if(datafeed.get(i).MessageAolPosition != null){
+                            //Log.i("i",String.valueOf(i));
+                            List<Double> lla = datafeed.get(i).MessageAolPosition.lla;
+                            Double lat = lla.get(0);
+                            Double lng = lla.get(1);
+                            LatLng latLng = new LatLng(lat,lng);
+                            aircraftPosition.add(latLng);
                         }
+                    }
+
+                    /*for (LatLng latLng : aircraftPosition) {
+                        //Log.i("hashMap", "Element at key $objectName : ${hashMap[objectName]}");
+                        Log.i("aircraftPosition",latLng.toString());
                     }*/
+
+
+
                 }
             }
         });
@@ -142,6 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void isMapReady(){
         fragmentMap.DoSomething(hashMap);
+        fragmentMap.DoSomethingTwo(aircraftPosition);
+        //hashMap.clear();
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -192,10 +233,24 @@ public class MainActivity extends AppCompatActivity {
 }
 
 class DroneData{
-    MessageAOLFlightPlan MessageAolFlightPlan;
+    MessageAolPosition MessageAolPosition;
+    MessageAoLFlightPlan MessageAolFlightPlan;
 }
 
-class MessageAOLFlightPlan{
+class MessageAolPosition{
+    String callsign;
+    String gufi;
+    List<Double> hpr;
+    List<Double> lla;
+    Double groundSpeed;
+    String misc;
+    String time;
+    String time_measured;
+    String time_sent;
+    String uss_name;
+}
+
+class MessageAoLFlightPlan{
     String callsign;
     String gufi;
     String state;
