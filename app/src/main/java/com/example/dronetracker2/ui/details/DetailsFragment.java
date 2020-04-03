@@ -1,5 +1,6 @@
 package com.example.dronetracker2.ui.details;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,8 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -46,8 +48,7 @@ public class DetailsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        detailsViewModel =
-                ViewModelProviders.of(this).get(DetailsViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_details, container, false);
         rv = root.findViewById(R.id.recyclerView);
         rv.setHasFixedSize(true);
@@ -55,16 +56,35 @@ public class DetailsFragment extends Fragment {
 
         detailItems = new ArrayList<>();
 
-//        getActivity().runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                parseJSON();
-//            }
-//        });
-
         parseJSON();
 
         return root;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
     }
 
     private void parseJSON() {
