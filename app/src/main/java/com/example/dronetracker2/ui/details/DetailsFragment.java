@@ -2,13 +2,10 @@ package com.example.dronetracker2.ui.details;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,14 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dronetracker2.ui.messages.*;
 import com.example.dronetracker2.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -127,83 +122,4 @@ public class DetailsFragment extends Fragment {
             }
         });
     }
-
-    class DroneData{
-        MessageAolPosition MessageAolPosition;
-        MessageAoLFlightPlan MessageAolFlightPlan;
-    }
-
-    class MessageAolPosition{
-        String callsign;
-        String gufi;
-        List<Double> hpr;
-        List<Double> lla;
-        Double groundSpeed;
-        String misc;
-        String time;
-        String time_measured;
-        String time_sent;
-        String uss_name;
-    }
-
-    class MessageAoLFlightPlan{
-        String callsign;
-        String gufi;
-        String state;
-        List<OperationVolume> operation_volumes;
-        ControllerLocation controller_location;
-        GCSLocation gcs_location;
-        MetaData metaData;
-        List<Double> lla;
-    }
-
-    class OperationVolume{
-        int ordinal;
-        boolean near_structure;
-        String effective_time_begin;
-        String effective_time_end;
-        AltitudeObj min_altitude;
-        AltitudeObj max_altitude;
-        boolean beyond_visual_line_of_sight;
-        String volume_type;
-        FGObject flight_geography;
-    }
-
-    class AltitudeObj{
-        int altitude_value;
-        String vertical_reference;
-        String units_of_measure;
-        String source;
-    }
-
-    class FGObject{
-        String type;
-        List<List<List<Double>>> coordinates;
-    }
-
-    class ControllerLocation{
-        List<Double> coordinates;
-        String type;
-    }
-
-    class GCSLocation{
-        List<Double> coordinates;
-        String type;
-    }
-
-    class MetaData{
-        boolean data_collection;
-        String scenario;
-        String test_card;
-        String call_sign;
-        String test_type;
-        String source;
-        String event_id;
-        String location;
-        String setting;
-        String free_text;
-        boolean modified;
-        String test_run;
-    }
-
 }

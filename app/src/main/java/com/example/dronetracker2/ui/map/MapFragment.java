@@ -74,22 +74,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         gMap = googleMap;
         LatLng marker = new LatLng(39.52721586111111, -119.81009614166666);
 
-        //gMap.addMarker(new MarkerOptions().position(marker).title("Marker in San Jose"));
-
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker,15));
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.isMapReady();
-
     }
 
-    public int DoSomething(HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap) {
-        if(gMap == null){
-            return -1;
-        }
+    public void DrawFlightPlans(HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap) {
         gMap.clear();
         //Log.i("doSomething", "I am a map");
         for (String gufi : hashMap.keySet()) {
-            Log.i("hashMap",gufi.toString() + " " + hashMap.get(gufi).toString());
+            Log.i("hashMap",gufi + " " + hashMap.get(gufi).toString());
             ArrayList<ArrayList<LatLng>> LFGP = hashMap.get(gufi);
             //Log.i("LFGP",LFGP.toString());
             for(int LFGPIndex = 0; LFGPIndex<LFGP.size();  LFGPIndex++){
@@ -104,22 +98,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     LatLng latLng = new LatLng(lat,lng);
                     poly.add(latLng);
                     Log.i("latlng", lat.toString() + " " + lng.toString());
-
                 }
                 gMap.addPolygon(poly);
             }
-
         }
-        return 0;
     }
 
-    public void DoSomethingTwo(ArrayList<LatLng> aircraftPosition){
+    public void DrawAircraft(ArrayList<LatLng> aircraftPosition){
         for (LatLng latLng : aircraftPosition) {
-            //Log.i("hashMap", "Element at key $objectName : ${hashMap[objectName]}");
-            //Log.i("aircraftPosition",latLng.toString());
-            //Double lat = latLng.latitude;
-            //Double lng = latLng.longitude;
-            gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptorFromVector(getActivity(), R.drawable.ic_flight_black_24dp)));
+            BitmapDescriptor bitmapDescriptor = bitmapDescriptorFromVector(getActivity(), R.drawable.ic_flight_black_24dp);
+            gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor));
         }
     }
 

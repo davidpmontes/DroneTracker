@@ -6,6 +6,9 @@ import android.util.Log;
 import com.example.dronetracker2.ui.details.DetailsFragment;
 import com.example.dronetracker2.ui.home.HomeFragment;
 import com.example.dronetracker2.ui.map.MapFragment;
+import com.example.dronetracker2.ui.messages.MessageAoLFlightPlan;
+import com.example.dronetracker2.ui.messages.MessageAolPosition;
+import com.example.dronetracker2.ui.messages.*;
 import com.example.dronetracker2.ui.server.ServerFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
@@ -23,7 +26,6 @@ import androidx.viewpager.widget.ViewPager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,7 +36,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.*;
+
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
@@ -48,8 +50,6 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap = new HashMap<>();
     private ArrayList<LatLng> aircraftPosition  = new ArrayList<LatLng>();
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,15 +62,10 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
 
         createFragments();
-        //fragmentMap.DoSomething();
 
         fetchJson();
         fetchJsonTwo();
-
-
     }
-
-
 
     private void fetchJson(){
         OkHttpClient client = new OkHttpClient();
@@ -101,16 +96,20 @@ public class MainActivity extends AppCompatActivity {
                     int operationVolumesSize = 0;
                     int coordinatesArray = 0;
 
-
-                    for(int datafeedIndex = 0; datafeedIndex<=datafeedSize; datafeedIndex++){
+                    for(int datafeedIndex = 0; datafeedIndex<=datafeedSize; datafeedIndex++)
+                    {
                         ArrayList<ArrayList<LatLng>> ListFlightGeographyPolygon = new ArrayList<ArrayList<LatLng>>();
                         String gufi = datafeed.get(datafeedIndex).MessageAolFlightPlan.gufi;
                         operationVolumesSize = datafeed.get(datafeedIndex).MessageAolFlightPlan.operation_volumes.size()-1;
-                        for(int operationVolumesIndex = 0; operationVolumesIndex<=operationVolumesSize; operationVolumesIndex++){
+
+                        for(int operationVolumesIndex = 0; operationVolumesIndex<=operationVolumesSize; operationVolumesIndex++)
+                        {
                             coordinatesArray = datafeed.get(datafeedIndex).MessageAolFlightPlan.operation_volumes.
                                     get(operationVolumesIndex).flight_geography.coordinates.get(0).size()-1;
                             ArrayList<LatLng> flightGeographyPolygon = new ArrayList<>();
-                            for(int coordinatesArrayIndex=0; coordinatesArrayIndex<=coordinatesArray; coordinatesArrayIndex++){
+
+                            for(int coordinatesArrayIndex=0; coordinatesArrayIndex<=coordinatesArray; coordinatesArrayIndex++)
+                            {
                                 List<Double> coordinates = datafeed.get(datafeedIndex).MessageAolFlightPlan.
                                         operation_volumes.get(operationVolumesIndex)
                                         .flight_geography.coordinates.get(0).get(coordinatesArrayIndex);
@@ -155,8 +154,10 @@ public class MainActivity extends AppCompatActivity {
 
                     DroneData[] mcArray = gson.fromJson(body, DroneData[].class);
                     List<DroneData> datafeed = Arrays.asList(mcArray);
-                    for(int i =0; i<datafeed.size();i++){
-                        if(datafeed.get(i).MessageAolPosition != null){
+                    for(int i =0; i<datafeed.size();i++)
+                    {
+                        if(datafeed.get(i).MessageAolPosition != null)
+                        {
                             //Log.i("i",String.valueOf(i));
                             List<Double> lla = datafeed.get(i).MessageAolPosition.lla;
                             Double lat = lla.get(0);
@@ -180,9 +181,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void isMapReady(){
-        fragmentMap.DoSomething(hashMap);
-        fragmentMap.DoSomethingTwo(aircraftPosition);
-        //hashMap.clear();
+        fragmentMap.DrawFlightPlans(hashMap);
+        fragmentMap.DrawAircraft(aircraftPosition);
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -232,83 +232,7 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
-class DroneData{
-    MessageAolPosition MessageAolPosition;
-    MessageAoLFlightPlan MessageAolFlightPlan;
-}
 
-class MessageAolPosition{
-    String callsign;
-    String gufi;
-    List<Double> hpr;
-    List<Double> lla;
-    Double groundSpeed;
-    String misc;
-    String time;
-    String time_measured;
-    String time_sent;
-    String uss_name;
-}
-
-class MessageAoLFlightPlan{
-    String callsign;
-    String gufi;
-    String state;
-    List<OperationVolume> operation_volumes;
-    ControllerLocation controller_location;
-    GCSLocation gcs_location;
-    MetaData metaData;
-    List<Double> lla;
-}
-
-class OperationVolume{
-    int ordinal;
-    boolean near_structure;
-    String effective_time_begin;
-    String effective_time_end;
-    AltitudeObj min_altitude;
-    AltitudeObj max_altitude;
-    boolean beyond_visual_line_of_sight;
-    String volume_type;
-    FGObject flight_geography;
-}
-
-class AltitudeObj{
-    int altitude_value;
-    String vertical_reference;
-    String units_of_measure;
-    String source;
-}
-
-class FGObject{
-    String type;
-    List<List<List<Double>>> coordinates;
-}
-
-class ControllerLocation{
-    List<Double> coordinates;
-    String type;
-}
-
-class GCSLocation{
-    List<Double> coordinates;
-    String type;
-}
-
-class MetaData{
-    boolean data_collection;
-    String scenario;
-    String test_card;
-    String call_sign;
-    String test_type;
-    String source;
-    String event_id;
-    String location;
-    String setting;
-    String free_text;
-    boolean modified;
-    String test_run;
-}
 
 //class DroneData(val MessageAolFlightPlan: MessageAOLFlightPlan)
 
