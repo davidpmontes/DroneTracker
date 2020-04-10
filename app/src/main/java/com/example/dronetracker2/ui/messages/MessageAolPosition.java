@@ -10,7 +10,4 @@ public class MessageAolPosition{
     public Double groundSpeed;
     public String misc;
     public String time;
-    public String time_measured;
-    public String time_sent;
-    public String uss_name;
 }
