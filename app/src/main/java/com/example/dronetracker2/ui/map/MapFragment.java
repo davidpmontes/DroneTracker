@@ -16,8 +16,10 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.dronetracker2.MainActivity;
+import com.example.dronetracker2.CurrentData;
 import com.example.dronetracker2.R;
+import com.example.dronetracker2.ui.messages.FGObject;
+import com.example.dronetracker2.ui.messages.OperationVolume;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -28,14 +30,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapViewModel mapViewModel;
     private View myview;
     private MapView mapView;
     private GoogleMap gMap;
+    private boolean isMapReady = false;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -69,44 +71,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
     public void onMapReady(GoogleMap googleMap) {
         gMap = googleMap;
-        LatLng marker = new LatLng(39.52721586111111, -119.81009614166666);
-
+        LatLng marker = new LatLng(37.335153, -121.880964);
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker,15));
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.isMapReady();
+        isMapReady = true;
     }
 
-    public void DrawFlightPlans(HashMap<String, ArrayList<ArrayList<LatLng>>> hashMap) {
+    public void DrawFlightPlans() {
+        if (!isMapReady)
+            return;
+
         gMap.clear();
-        //Log.i("doSomething", "I am a map");
-        for (String gufi : hashMap.keySet()) {
-            Log.i("hashMap",gufi + " " + hashMap.get(gufi).toString());
-            ArrayList<ArrayList<LatLng>> LFGP = hashMap.get(gufi);
-            //Log.i("LFGP",LFGP.toString());
-            for(int LFGPIndex = 0; LFGPIndex<LFGP.size();  LFGPIndex++){
-                Log.i("LFGP",LFGP.get(LFGPIndex).toString());
-                ArrayList<LatLng> fGP = LFGP.get(LFGPIndex);
+
+        for (String gufi : CurrentData.Instance.flightplans.keySet()) {
+            for (OperationVolume operationVolume : CurrentData.Instance.flightplans.get(gufi).message.operation_volumes)
+            {
+                FGObject flightGeography = operationVolume.flight_geography;
+                List<List<List<Double>>> coordinates = flightGeography.coordinates;
                 PolygonOptions poly = new PolygonOptions();
                 poly.fillColor(Color.GRAY);
-                for(int fGPIndex = 0; fGPIndex<fGP.size(); fGPIndex++){
-                    Log.i("fGP",fGP.get(fGPIndex).toString());
-                    Double lat = fGP.get(fGPIndex).latitude;
-                    Double lng = fGP.get(fGPIndex).longitude;
-                    LatLng latLng = new LatLng(lat,lng);
+
+                for (List<Double> coordinate : coordinates.get(0))
+                {
+                    double latitude = coordinate.get(1);
+                    double longitude = coordinate.get(0);
+                    LatLng latLng = new LatLng(latitude, longitude);
                     poly.add(latLng);
-                    Log.i("latlng", lat.toString() + " " + lng.toString());
                 }
                 gMap.addPolygon(poly);
             }
         }
     }
 
-    public void DrawAircraft(ArrayList<LatLng> aircraftPosition){
-        for (LatLng latLng : aircraftPosition) {
+    public void DrawAircraft() {
+        if (!isMapReady)
+            return;
+
+        for (String gufi : CurrentData.Instance.aircraft.keySet()) {
             BitmapDescriptor bitmapDescriptor = bitmapDescriptorFromVector(getActivity(), R.drawable.ic_flight_black_24dp);
+
+            List<Double> coordinate = CurrentData.Instance.aircraft.get(gufi).message.lla;
+            double latitude = coordinate.get(1);
+            double longitude = coordinate.get(0);
+            LatLng latLng = new LatLng(latitude, longitude);
             gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor));
         }
     }

@@ -51,7 +51,7 @@ public class DetailsFragment extends Fragment {
 
         detailItems = new ArrayList<>();
 
-        parseJSON();
+        //parseJSON();
 
         return root;
     }
@@ -82,44 +82,44 @@ public class DetailsFragment extends Fragment {
 
     }
 
-    private void parseJSON() {
-        OkHttpClient client = new OkHttpClient();
-        String url = "http://10.0.2.2:3000";
-        Request request = new Request.Builder().url(url).build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.i("FAIL", "Failed to retreive data");
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                String body = response.body().string();
-
-                Gson gson = new GsonBuilder().create();
-
-                DroneData[] data = gson.fromJson(body, DroneData[].class);
-                List<DroneData> datafeed = Arrays.asList(data);
-
-                for (int i = 0; i < datafeed.size(); i++) {
-                    String gufi = datafeed.get(i).MessageAolFlightPlan.gufi;
-                    String lat = datafeed.get(i).MessageAolFlightPlan.gcs_location.coordinates.get(1).toString();
-                    String lng = datafeed.get(i).MessageAolFlightPlan.gcs_location.coordinates.get(0).toString();
-                    DetailItem detailItem = new DetailItem("GUFI: ", gufi, "LAT: ", lat, "LNG: ", lng);
-                    detailItems.add(detailItem);
-                }
-                adapter = new Adapter(detailItems, getActivity());
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        rv.setAdapter(adapter);
-                    }
-                });
-
-            }
-        });
-    }
+//    private void parseJSON() {
+//        OkHttpClient client = new OkHttpClient();
+//        String url = "http://10.0.2.2:3000";
+//        Request request = new Request.Builder().url(url).build();
+//
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Log.i("FAIL", "Failed to retreive data");
+//                e.printStackTrace();
+//            }
+//
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+//                String body = response.body().string();
+//
+//                Gson gson = new GsonBuilder().create();
+//
+//                DroneData[] data = gson.fromJson(body, DroneData[].class);
+//                List<DroneData> datafeed = Arrays.asList(data);
+//
+//                for (int i = 0; i < datafeed.size(); i++) {
+//                    String gufi = datafeed.get(i).MessageAolFlightPlan.gufi;
+//                    String lat = datafeed.get(i).MessageAolFlightPlan.gcs_location.coordinates.get(1).toString();
+//                    String lng = datafeed.get(i).MessageAolFlightPlan.gcs_location.coordinates.get(0).toString();
+//                    DetailItem detailItem = new DetailItem("GUFI: ", gufi, "LAT: ", lat, "LNG: ", lng);
+//                    detailItems.add(detailItem);
+//                }
+//                adapter = new Adapter(detailItems, getActivity());
+//
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        rv.setAdapter(adapter);
+//                    }
+//                });
+//
+//            }
+//        });
+//    }
 }
