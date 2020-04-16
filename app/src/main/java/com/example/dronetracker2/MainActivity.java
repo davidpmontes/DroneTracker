@@ -1,13 +1,12 @@
 package com.example.dronetracker2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
-import com.example.dronetracker2.ui.details.DetailsFragment;
-import com.example.dronetracker2.ui.home.HomeFragment;
-import com.example.dronetracker2.ui.map.MapFragment;
-import com.example.dronetracker2.ui.server.ServerFragment;
-import com.google.android.material.tabs.TabLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
+import com.example.dronetracker2.ui.details.DetailsFragment;
+import com.example.dronetracker2.ui.home.HomeFragment;
+import com.example.dronetracker2.ui.map.MapFragment;
+import com.example.dronetracker2.ui.server.ServerFragment;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +49,27 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
 
         createFragments();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item1:
+                Intent mIntent = new Intent(this, HomeActivity.class);
+                startActivity(mIntent);
+                //Toast.makeText(this, "Item 1 selected", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 
     public void output(final String text) {
@@ -105,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
+        //viewPagerAdapter.addFragment(fragmentHome, "Home");
         viewPagerAdapter.addFragment(fragmentServer, "Server");
         viewPagerAdapter.addFragment(fragmentMap, "Map");
         viewPagerAdapter.addFragment(fragmentDetails, "Details");
