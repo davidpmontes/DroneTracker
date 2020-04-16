@@ -109,7 +109,7 @@ public class ServerFragment extends Fragment {
     }
 
     private void DisconnectWebsocket()
-    {
+    { 
         ws.close(1000, "closing websocket");
     }
 

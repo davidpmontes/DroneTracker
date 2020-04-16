@@ -2,7 +2,6 @@ package com.example.dronetracker2.ui.details;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,44 +15,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dronetracker2.Aircraft;
 import com.example.dronetracker2.CurrentData;
-import com.example.dronetracker2.ui.messages.*;
 import com.example.dronetracker2.R;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 public class DetailsFragment extends Fragment {
-
     private DetailsViewModel detailsViewModel;
 
-    private RecyclerView rv;
+    private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
     private List<DetailItem> detailItems;
+    private boolean isDetailsReady;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_details, container, false);
-        rv = root.findViewById(R.id.recyclerView);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView = root.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
 
         detailItems = new ArrayList<>();
-
-        //parseJSON();
+        isDetailsReady = true;
 
         return root;
     }
@@ -81,10 +67,12 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-
     }
 
     public void UpdateDetails() {
+        if (!isDetailsReady)
+            return;
+
         detailItems.clear();
 
         for (String gufiKey : CurrentData.Instance.aircraft.keySet()) {
@@ -97,13 +85,20 @@ public class DetailsFragment extends Fragment {
             detailItems.add(detailItem);
         }
 
+        //if (adapter == null) {
         adapter = new Adapter(detailItems, getActivity());
+        recyclerView.setAdapter(adapter);
+        //}
+        //else
+        //{
+        //    adapter.notifyDataSetChanged();
+        //}
 
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                rv.setAdapter(adapter);
-            }
-        });
+//        getActivity().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                recyclerView.setAdapter(adapter);
+//            }
+//        });
     }
 }
