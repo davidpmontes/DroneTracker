@@ -135,7 +135,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
             }
             else
             {
-                Marker newMarker = gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor).title(gufi));
+                String callsign = "<empty>";
+                if (CurrentData.Instance.flightplans.containsKey(gufi))
+                {
+                    callsign = CurrentData.Instance.flightplans.get(gufi).message.callsign;
+                }
+                Marker newMarker = gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor).title(callsign));
                 aircraftMarkers.put(gufi, newMarker);
             }
         }
