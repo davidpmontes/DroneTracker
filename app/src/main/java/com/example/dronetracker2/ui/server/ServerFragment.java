@@ -78,7 +78,6 @@ public class ServerFragment extends Fragment {
                     serverEditText.setEnabled(false);
                     usernameEditText.setEnabled(false);
                     passwordEditText.setEnabled(false);
-                    mainActivity.OnWebSocketClose();
                 }
                 else
                 {
@@ -90,6 +89,7 @@ public class ServerFragment extends Fragment {
                     serverEditText.setEnabled(true);
                     usernameEditText.setEnabled(true);
                     passwordEditText.setEnabled(true);
+                    mainActivity.OnWebSocketClose();
                     DisconnectWebsocket();
                 }
             }

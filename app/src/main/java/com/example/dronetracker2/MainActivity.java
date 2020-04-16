@@ -17,7 +17,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.dronetracker2.ui.details.DetailsFragment;
-import com.example.dronetracker2.ui.home.HomeFragment;
 import com.example.dronetracker2.ui.map.MapFragment;
 import com.example.dronetracker2.ui.server.ServerFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item1:
                 Intent mIntent = new Intent(this, HomeActivity.class);
                 startActivity(mIntent);
-                //Toast.makeText(this, "Item 1 selected", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -91,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         if (isNewAircraft)
         {
             fragmentMap.DrawAircraft();
+            fragmentDetails.UpdateDetails();
         }
     }
 
@@ -131,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        //viewPagerAdapter.addFragment(fragmentHome, "Home");
         viewPagerAdapter.addFragment(fragmentServer, "Server");
         viewPagerAdapter.addFragment(fragmentMap, "Map");
         viewPagerAdapter.addFragment(fragmentDetails, "Details");
