@@ -78,18 +78,19 @@
             android:inputType="text"
             app:layout_constraintTop_toBottomOf="@+id/edit_username" />
 
+
         <Button
             android:id="@+id/button_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/login_button_background"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
+            android:text="Connect"
             android:textAlignment="center"
-            android:text="Login"
-            android:textSize="20sp"
             android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:background="@drawable/login_button_background_connect"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_password" />
