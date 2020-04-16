@@ -5,7 +5,6 @@ import com.google.android.gms.maps.model.Marker;
 
 public class Aircraft {
     public MessageAolPosition message;
-    public Marker marker;
 
     public Aircraft(MessageAolPosition message)
     {
