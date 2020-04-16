@@ -27,9 +27,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -38,6 +40,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private MapView mapView;
     private GoogleMap gMap;
     private boolean isMapReady = false;
+    private HashMap<String, Marker> aircraftMarkers = new HashMap<>();
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -82,8 +85,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (!isMapReady)
             return;
 
-        gMap.clear();
-
         for (String gufi : CurrentData.Instance.flightplans.keySet()) {
             for (OperationVolume operationVolume : CurrentData.Instance.flightplans.get(gufi).message.operation_volumes)
             {
@@ -112,10 +113,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             BitmapDescriptor bitmapDescriptor = bitmapDescriptorFromVector(getActivity(), R.drawable.ic_flight_black_24dp);
 
             List<Double> coordinate = CurrentData.Instance.aircraft.get(gufi).message.lla;
-            double latitude = coordinate.get(1);
-            double longitude = coordinate.get(0);
+            double latitude = coordinate.get(0);
+            double longitude = coordinate.get(1);
             LatLng latLng = new LatLng(latitude, longitude);
-            gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor));
+
+            if (aircraftMarkers.containsKey(gufi))
+            {
+                aircraftMarkers.get(gufi).setPosition(latLng);
+            }
+            else
+            {
+                Marker newMarker = gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor));
+                aircraftMarkers.put(gufi, newMarker);
+            }
         }
     }
 
