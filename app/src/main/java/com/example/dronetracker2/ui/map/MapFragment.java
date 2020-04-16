@@ -130,6 +130,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    public void EraseAll()
+    {
+        gMap.clear();
+        aircraftMarkers.clear();
+    }
+
     private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
         Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
         vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
