@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Log.d("WS", text);
+                //Log.d("WS", text);
                 currentData.ProcessNewMessages(text);
             }
         });
@@ -75,10 +75,16 @@ public class MainActivity extends AppCompatActivity {
     public void MessageProcessingComplete(boolean isNewFlightPlans, boolean isNewAircraft)
     {
         if (isNewFlightPlans)
+        {
+            Log.d("WS", "drawing flightplans");
             fragmentMap.DrawFlightPlans();
+        }
 
         if (isNewAircraft)
+        {
+            Log.d("WS", "drawing aircraft");
             fragmentMap.DrawAircraft();
+        }
     }
 
     private class ViewPagerAdapter extends FragmentPagerAdapter {
