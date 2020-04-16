@@ -20,21 +20,13 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.WebSocket;
-
 public class MainActivity extends AppCompatActivity {
-
-    private OkHttpClient client;
-    private WebSocket ws;
 
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private CurrentData currentData;
 
-    private HomeFragment fragmentHome;
     private ServerFragment fragmentServer;
     private MapFragment fragmentMap;
     private DetailsFragment fragmentDetails;
@@ -52,21 +44,12 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
 
         createFragments();
-
-        client = new OkHttpClient();
-        Request request = new Request.Builder().url("ws://10.0.2.2:9003/test-ws").build();
-        MyWebsocketListener listener = new MyWebsocketListener(this);
-
-        ws = client.newWebSocket(request, listener);
-
-        client.dispatcher().executorService().shutdown();
     }
 
     public void output(final String text) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //Log.d("WS", text);
                 currentData.ProcessNewMessages(text);
             }
         });
@@ -76,13 +59,11 @@ public class MainActivity extends AppCompatActivity {
     {
         if (isNewFlightPlans)
         {
-            Log.d("WS", "drawing flightplans");
             fragmentMap.DrawFlightPlans();
         }
 
         if (isNewAircraft)
         {
-            Log.d("WS", "drawing aircraft");
             fragmentMap.DrawAircraft();
         }
     }
@@ -118,14 +99,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createFragments() {
-        fragmentHome = new HomeFragment();
         fragmentServer = new ServerFragment();
         fragmentMap = new MapFragment();
         fragmentDetails = new DetailsFragment();
 
         tabLayout.setupWithViewPager(viewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        viewPagerAdapter.addFragment(fragmentHome, "Home");
         viewPagerAdapter.addFragment(fragmentServer, "Server");
         viewPagerAdapter.addFragment(fragmentMap, "Map");
         viewPagerAdapter.addFragment(fragmentDetails, "Details");
