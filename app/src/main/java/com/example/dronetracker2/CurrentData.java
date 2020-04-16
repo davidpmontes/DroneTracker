@@ -23,13 +23,14 @@ public class CurrentData {
         MessageWrapperOperation messageWrapperAolFlightPlan = new MessageWrapperOperation();
         MessageWrapperPosition messageWrapperAolPosition = new MessageWrapperPosition();
 
-        boolean isNewFlightPlans = false;
+        boolean isUpdateForFlightPlans = false;
+        boolean isUpdateForAircraft = false;
         boolean isNewAircraft = false;
 
         try {
             messageWrapperAolFlightPlan = gson.fromJson(rawMessage, MessageWrapperOperation.class);
             String gufi = messageWrapperAolFlightPlan.MessageAolFlightPlan.gufi;
-            isNewFlightPlans = true;
+            isUpdateForFlightPlans = true;
             if (flightplans.containsKey(gufi))
             {
                 FlightPlan oldFlightPlan = flightplans.get(gufi);
@@ -46,7 +47,7 @@ public class CurrentData {
         try {
             messageWrapperAolPosition = gson.fromJson(rawMessage, MessageWrapperPosition.class);
             String gufi = messageWrapperAolPosition.MessageAolPosition.gufi;
-            isNewAircraft = true;
+            isUpdateForAircraft = true;
             if (aircraft.containsKey(gufi))
             {
                 Aircraft oldAircraft = aircraft.get(gufi);
@@ -54,12 +55,13 @@ public class CurrentData {
             }
             else
             {
+                isNewAircraft = true;
                 Aircraft newAircraft = new Aircraft(messageWrapperAolPosition.MessageAolPosition);
                 aircraft.put(gufi, newAircraft);
             }
         } catch (Exception e) {
         }
 
-        mainActivity.MessageProcessingComplete(isNewFlightPlans, isNewAircraft);
+        mainActivity.MessageProcessingComplete(isUpdateForFlightPlans, isUpdateForAircraft, isNewAircraft);
     }
 }

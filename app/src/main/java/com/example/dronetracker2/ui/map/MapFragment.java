@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,8 +35,9 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private MapViewModel mapViewModel;
+    private ImageButton userLocationButton;
     private View myview;
     private MapView mapView;
     private GoogleMap gMap;
@@ -57,6 +59,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         myview = inflater.inflate(R.layout.fragment_map, container, false);
+        userLocationButton = myview.findViewById(R.id.userLocationImageButton);
+
+        userLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         mapView = myview.findViewById(R.id.map);
 
@@ -79,6 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         gMap = googleMap;
         LatLng marker = new LatLng(37.335153, -121.880964);
         gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker,15));
+        gMap.setOnMarkerClickListener(this);
         isMapReady = true;
     }
 
@@ -124,7 +135,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
             else
             {
-                Marker newMarker = gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor));
+                Marker newMarker = gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor).title(gufi));
                 aircraftMarkers.put(gufi, newMarker);
             }
         }
@@ -143,5 +154,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        //Log.d("WS", marker.getTitle());
+        //marker.setTitle("David");
+        //marker.showInfoWindow();
+        // Return false to indicate that we have not consumed the event and that we wish
+        // for the default behavior to occur (which is for the camera to move such that the
+        // marker is centered and for the marker's info window to open, if it has one).
+        return false;
     }
 }
