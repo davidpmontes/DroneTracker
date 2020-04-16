@@ -1,6 +1,7 @@
 package com.example.dronetracker2.ui.server;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import okhttp3.WebSocket;
 public class ServerFragment extends Fragment {
 
     private ServerViewModel serverViewModel;
+    private MainActivity mainActivity;
 
     private OkHttpClient client;
     private WebSocket ws;
@@ -53,6 +55,8 @@ public class ServerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_server, container, false);
 
+        mainActivity = (MainActivity) getActivity();
+
         loginButton = view.findViewById(R.id.button_login);
         serverEditText = view.findViewById(R.id.edit_server);
         usernameEditText = view.findViewById(R.id.edit_username);
@@ -68,11 +72,24 @@ public class ServerFragment extends Fragment {
                     loginButton.setText("Disconnect");
                     loginButton.setBackgroundResource (R.drawable.login_button_background_disconnect);
                     ConnectToWebsocket();
+                    serverEditText.setTextColor(Color.parseColor("#666666"));
+                    usernameEditText.setTextColor(Color.parseColor("#666666"));
+                    passwordEditText.setTextColor(Color.parseColor("#666666"));
+                    serverEditText.setEnabled(false);
+                    usernameEditText.setEnabled(false);
+                    passwordEditText.setEnabled(false);
+                    mainActivity.OnWebSocketClose();
                 }
                 else
                 {
                     loginButton.setText("Connect");
                     loginButton.setBackgroundResource(R.drawable.login_button_background_connect);
+                    serverEditText.setTextColor(Color.parseColor("#FFFFFF"));
+                    usernameEditText.setTextColor(Color.parseColor("#FFFFFF"));
+                    passwordEditText.setTextColor(Color.parseColor("#FFFFFF"));
+                    serverEditText.setEnabled(true);
+                    usernameEditText.setEnabled(true);
+                    passwordEditText.setEnabled(true);
                     DisconnectWebsocket();
                 }
             }

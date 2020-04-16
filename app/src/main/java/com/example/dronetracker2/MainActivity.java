@@ -111,4 +111,11 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager.setAdapter(viewPagerAdapter);
     }
+
+    public void OnWebSocketClose()
+    {
+        fragmentMap.EraseAll();
+        currentData.aircraft.clear();
+        currentData.flightplans.clear();
+    }
 }
