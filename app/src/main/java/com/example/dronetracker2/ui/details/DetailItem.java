@@ -1,6 +1,8 @@
 package com.example.dronetracker2.ui.details;
 
 public class DetailItem {
+    private String callsign;
+    private String callsignPlaceholder;
     private String gufi;
     private String gufiPlaceHolder;
     private String lat;
@@ -8,13 +10,23 @@ public class DetailItem {
     private String lng;
     private String lngPlaceholder;
 
-    public DetailItem(String gufi, String gufiPlaceHolder, String lat, String latPlaceholder, String lng, String lngPlaceholder) {
+    public DetailItem(String callsign, String callsignPlaceholder, String gufi, String gufiPlaceHolder, String lat, String latPlaceholder, String lng, String lngPlaceholder) {
+        this.callsign = callsign;
+        this.callsignPlaceholder = callsignPlaceholder;
         this.gufi = gufi;
         this.gufiPlaceHolder = gufiPlaceHolder;
         this.lat = lat;
         this.latPlaceholder = latPlaceholder;
         this.lng = lng;
         this.lngPlaceholder = lngPlaceholder;
+    }
+
+    public String getCallsign() {
+        return callsign;
+    }
+
+    public String getCallsignPlaceholder() {
+        return callsignPlaceholder;
     }
 
     public String getGufi() {
