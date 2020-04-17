@@ -1,10 +1,14 @@
 package com.example.dronetracker2.ui.map;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -44,6 +49,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private boolean isMapReady = false;
     private HashMap<String, Marker> aircraftMarkers = new HashMap<>();
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -64,7 +70,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         userLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                String providerInfo = LocationManager.NETWORK_PROVIDER;
+                if (ActivityCompat.checkSelfPermission(getContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                Location location = locationManager.getLastKnownLocation(providerInfo);
+                LatLng latlngCurrent = null;
+                if (location == null)
+                {
+                    latlngCurrent = new LatLng(37.3352, -121.8811);
+                }
+                else
+                {
+                    latlngCurrent = new LatLng(location.getLatitude(), location.getLongitude());
+                }
+                gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlngCurrent, 15));
             }
         });
 
