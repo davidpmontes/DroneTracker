@@ -42,6 +42,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             holder.itemView.setBackgroundColor(Color.parseColor("#d4d4d4"));
         }
 
+        holder.textviewCallsign.setText(detailItem.getCallsign());
+        holder.textviewCallsignPlaceHolder.setText(detailItem.getCallsignPlaceholder());
         holder.textViewGufi.setText(detailItem.getGufi());
         holder.textViewGufiPlaceHolder.setText(detailItem.getGufiPlaceHolder());
         holder.textViewLat.setText(detailItem.getLat());
@@ -56,6 +58,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView textviewCallsign;
+        public TextView textviewCallsignPlaceHolder;
         public TextView textViewGufi;
         public TextView textViewGufiPlaceHolder;
         public TextView textViewLat;
@@ -66,6 +70,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            //add something for image view
+
+            textviewCallsign = itemView.findViewById(R.id.callsign_textView);
+            textviewCallsignPlaceHolder = itemView.findViewById(R.id.callsign_placeholder);
             textViewGufi = itemView.findViewById(R.id.gufi_textView);
             textViewGufiPlaceHolder =  itemView.findViewById(R.id.gufi_placeholder);
             textViewLat = itemView.findViewById(R.id.lat_textView);
