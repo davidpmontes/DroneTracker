@@ -9,68 +9,102 @@
     <TextView
         android:id="@+id/gufi_textView"
         android:layout_width="70dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="3dp"
         android:text="GUFI:"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView_drone"
+        app:layout_constraintTop_toBottomOf="@+id/callsign_textView" />
+
+    <TextView
+        android:id="@+id/callsign_textView"
+        android:layout_width="95dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="10dp"
+        android:text="Callsign: "
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@+id/imageView_drone"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/lat_textView"
-        android:layout_width="70dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="5dp"
+        android:layout_width="55dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="1dp"
         android:text="Lat:"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gufi_textView" />
+        app:layout_constraintStart_toEndOf="@+id/imageView_drone"
+        app:layout_constraintTop_toBottomOf="@+id/gufi_textView" />
 
     <TextView
         android:id="@+id/lng_textView"
-        android:layout_width="70dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="5dp"
+        android:layout_width="60dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="1dp"
         android:text="Long:"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/lat_textView" />
+        app:layout_constraintStart_toEndOf="@+id/imageView_drone"
+        app:layout_constraintTop_toBottomOf="@+id/lat_textView" />
 
     <TextView
         android:id="@+id/gufi_placeholder"
-        android:layout_width="280dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="25dp"
+        android:layout_width="190dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/gufi_textView"
+        app:layout_constraintTop_toBottomOf="@+id/callsign_textView" />
+
+    <TextView
+        android:id="@+id/callsign_placeholder"
+        android:layout_width="165dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/callsign_textView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/lat_placeholder"
-        android:layout_width="280dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="25dp"
+        android:layout_width="210dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="15dp"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/lat_textView"
-        app:layout_constraintTop_toBottomOf="@id/gufi_placeholder" />
+        app:layout_constraintTop_toBottomOf="@+id/gufi_placeholder" />
 
     <TextView
         android:id="@+id/lng_placeholder"
-        android:layout_width="280dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="25dp"
+        android:layout_width="200dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="15dp"
         android:text=""
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/lng_textView"
-        app:layout_constraintTop_toBottomOf="@id/lat_placeholder" />
+        app:layout_constraintTop_toBottomOf="@+id/lat_placeholder" />
+
+    <ImageView
+        android:id="@+id/imageView_drone"
+        android:layout_width="116dp"
+        android:layout_height="116dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_flight_black_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
