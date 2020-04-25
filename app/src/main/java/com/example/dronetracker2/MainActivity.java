@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private MapFragment fragmentMap;
     private DetailsFragment fragmentDetails;
     public boolean isWebSocketActive;
+    private boolean fragmentsCreated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createFragments() {
+        if (fragmentsCreated)
+            return;
+
+        fragmentsCreated = true;
+
         fragmentServer = new ServerFragment();
         fragmentMap = new MapFragment();
         fragmentDetails = new DetailsFragment();
