@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.dronetracker2.ui.details.DetailItem;
 import com.example.dronetracker2.ui.details.DetailsFragment;
 import com.example.dronetracker2.ui.map.MapFragment;
 import com.example.dronetracker2.ui.server.ServerFragment;
@@ -81,6 +83,12 @@ public class MainActivity extends AppCompatActivity {
         viewPagerAdapter.addFragment(fragmentDetails, "Details");
 
         viewPager.setAdapter(viewPagerAdapter);
+    }
+
+    public void OnDroneDetailSelected(DetailItem detailItem)
+    {
+        fragmentMap.LockOntoAircraft(detailItem);
+        viewPager.setCurrentItem(1);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.dronetracker2.ui.details;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dronetracker2.MainActivity;
 import com.example.dronetracker2.R;
 
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
+
 
     private List<DetailItem> detailItems;
     private Context context;
@@ -24,14 +27,23 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         this.context = context;
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.detail_item, parent, false);
 
-        return new ViewHolder(v);
+        final ViewHolder newViewHolder = new ViewHolder(v);
+
+        newViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = newViewHolder.getAdapterPosition();
+                ((MainActivity)context).OnDroneDetailSelected(detailItems.get(i));
+            }
+        });
+
+        return newViewHolder;
     }
 
     @Override

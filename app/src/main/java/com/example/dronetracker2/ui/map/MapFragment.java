@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.dronetracker2.CurrentData;
 import com.example.dronetracker2.R;
+import com.example.dronetracker2.ui.details.DetailItem;
 import com.example.dronetracker2.ui.messages.FGObject;
 import com.example.dronetracker2.ui.messages.OperationVolume;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +33,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -48,7 +50,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private GoogleMap gMap;
     private boolean isMapReady = false;
     private HashMap<String, Marker> aircraftMarkers = new HashMap<>();
-
+    private boolean isLockedOntoAircraft;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -138,6 +140,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
                 gMap.addPolygon(poly);
             }
         }
+    }
+
+    public void LockOntoAircraft(DetailItem detailItem) {
+        isLockedOntoAircraft = true;
+        Log.d("WS", detailItem.getLatPlaceholder());
+        Log.d("WS", detailItem.getLngPlaceholder());
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(Double.parseDouble(detailItem.getLatPlaceholder()),
+                                   Double.parseDouble(detailItem.getLngPlaceholder())))
+                .zoom(18)
+                .build();
+        gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     public void DrawAircraft() {
