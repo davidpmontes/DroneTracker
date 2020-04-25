@@ -64,38 +64,47 @@ public class ServerFragment extends Fragment {
 
         serverEditText.setText("ws://10.0.2.2:9003/test-ws");
 
+        if (mainActivity.isWebSocketActive)
+            SetUIAfterConnection();
+        else
+            SetUIAfterDisconnection();
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (loginButton.getText().toString().equals("Connect"))
-                {
-                    loginButton.setText("Disconnect");
-                    loginButton.setBackgroundResource (R.drawable.login_button_background_disconnect);
                     ConnectToWebsocket();
-                    serverEditText.setTextColor(Color.parseColor("#666666"));
-                    usernameEditText.setTextColor(Color.parseColor("#666666"));
-                    passwordEditText.setTextColor(Color.parseColor("#666666"));
-                    serverEditText.setEnabled(false);
-                    usernameEditText.setEnabled(false);
-                    passwordEditText.setEnabled(false);
-                }
                 else
-                {
-                    loginButton.setText("Connect");
-                    loginButton.setBackgroundResource(R.drawable.login_button_background_connect);
-                    serverEditText.setTextColor(Color.parseColor("#FFFFFF"));
-                    usernameEditText.setTextColor(Color.parseColor("#FFFFFF"));
-                    passwordEditText.setTextColor(Color.parseColor("#FFFFFF"));
-                    serverEditText.setEnabled(true);
-                    usernameEditText.setEnabled(true);
-                    passwordEditText.setEnabled(true);
-                    mainActivity.OnWebSocketClose();
                     DisconnectWebsocket();
-                }
             }
         });
 
         return view;
+    }
+
+    private void SetUIAfterConnection()
+    {
+        loginButton.setText("Disconnect");
+        loginButton.setBackgroundResource (R.drawable.login_button_background_disconnect);
+        serverEditText.setTextColor(Color.parseColor("#666666"));
+        usernameEditText.setTextColor(Color.parseColor("#666666"));
+        passwordEditText.setTextColor(Color.parseColor("#666666"));
+        serverEditText.setEnabled(false);
+        usernameEditText.setEnabled(false);
+        passwordEditText.setEnabled(false);
+    }
+
+    private void SetUIAfterDisconnection()
+    {
+        loginButton.setText("Connect");
+        loginButton.setBackgroundResource(R.drawable.login_button_background_connect);
+        serverEditText.setTextColor(Color.parseColor("#FFFFFF"));
+        usernameEditText.setTextColor(Color.parseColor("#FFFFFF"));
+        passwordEditText.setTextColor(Color.parseColor("#FFFFFF"));
+        serverEditText.setEnabled(true);
+        usernameEditText.setEnabled(true);
+        passwordEditText.setEnabled(true);
+        mainActivity.OnWebSocketClose();
     }
 
     @Override
@@ -111,6 +120,7 @@ public class ServerFragment extends Fragment {
     private void DisconnectWebsocket()
     { 
         ws.close(1000, "closing websocket");
+        SetUIAfterDisconnection();
     }
 
     private void ConnectToWebsocket()
@@ -128,5 +138,6 @@ public class ServerFragment extends Fragment {
         ws.send("password:" + password);
 
         client.dispatcher().executorService().shutdown();
+        SetUIAfterConnection();
     }
 }
