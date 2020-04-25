@@ -65,7 +65,9 @@ public class ServerFragment extends Fragment {
         serverEditText.setText("ws://10.0.2.2:9003/test-ws");
 
         if (mainActivity.isWebSocketActive)
+        {
             SetUIAfterConnection();
+        }
         else
             SetUIAfterDisconnection();
 
