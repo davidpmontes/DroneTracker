@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,9 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.dronetracker2.ui.details.DetailsFragment;
@@ -31,9 +27,6 @@ import com.example.dronetracker2.ui.server.ServerFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,11 +39,14 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    MyAdapter viewPagerAdapter;
+
     private CurrentData currentData;
 
     private ServerFragment fragmentServer;
     private MapFragment fragmentMap;
     private DetailsFragment fragmentDetails;
+    public boolean isWebSocketActive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +57,24 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        viewPagerAdapter = new MyAdapter(getSupportFragmentManager());
+
         viewPager = findViewById(R.id.page_viewer);
         tabLayout = findViewById(R.id.tab_layout);
+
+        tabLayout.setupWithViewPager(viewPager);
+    }
+
+    private void createFragments() {
+        fragmentServer = new ServerFragment();
+        fragmentMap = new MapFragment();
+        fragmentDetails = new DetailsFragment();
+
+        viewPagerAdapter.addFragment(fragmentServer, "Server");
+        viewPagerAdapter.addFragment(fragmentMap, "Map");
+        viewPagerAdapter.addFragment(fragmentDetails, "Details");
+
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
     @Override
@@ -94,6 +106,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void onWebSocketOpen()
+    {
+        isWebSocketActive = true;
+    }
+
+    public void onWebSocketClose()
+    {
+        isWebSocketActive = false;
+    }
+
     public void MessageProcessingComplete(boolean isUpdateForFlightPlans,
                                           boolean isUpdateForAircraft,
                                           boolean isNewAircraft)
@@ -110,49 +132,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class ViewPagerAdapter extends FragmentPagerAdapter {
-        private List<Fragment> fragments = new ArrayList<>();
-        private List<String> fragmentTitle = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager fm, int behavior) {
-            super(fm, behavior);
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            fragments.add(fragment);
-            fragmentTitle.add(title);
-        }
-
-        @NonNull
-        @Override
-        public Fragment getItem(int position) {
-            return fragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitle.get(position);
-        }
-    }
-
-    private void createFragments() {
-        fragmentServer = new ServerFragment();
-        fragmentMap = new MapFragment();
-        fragmentDetails = new DetailsFragment();
-
-        tabLayout.setupWithViewPager(viewPager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), 0);
-        viewPagerAdapter.addFragment(fragmentServer, "Server");
-        viewPagerAdapter.addFragment(fragmentMap, "Map");
-        viewPagerAdapter.addFragment(fragmentDetails, "Details");
-
-        viewPager.setAdapter(viewPagerAdapter);
-    }
 
     public void OnWebSocketClose()
     {

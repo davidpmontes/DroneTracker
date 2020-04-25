@@ -18,10 +18,12 @@ public class MyWebsocketListener extends WebSocketListener {
 
     @Override
     public void onOpen(WebSocket webSocket, Response response) {
+        mainActivity.onWebSocketOpen();
     }
 
     @Override
     public void onMessage(WebSocket webSocket, String text) {
+
         mainActivity.output(text);
     }
     @Override
@@ -30,6 +32,7 @@ public class MyWebsocketListener extends WebSocketListener {
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
         webSocket.close(NORMAL_CLOSURE_STATUS, null);
+        mainActivity.onWebSocketClose();
     }
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, Response response) {

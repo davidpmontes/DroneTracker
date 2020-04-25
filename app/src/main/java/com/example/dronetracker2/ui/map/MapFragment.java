@@ -171,6 +171,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
 
     public void EraseAll()
     {
+        if (gMap == null)
+            return;
+
         gMap.clear();
         aircraftMarkers.clear();
     }

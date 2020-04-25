@@ -82,7 +82,12 @@ public class DetailsFragment extends Fragment {
             String lat = aircraft.message.lla.get(0).toString().substring(0, 10);
             String lng = aircraft.message.lla.get(1).toString().substring(0, 10);
             String callsign = "";
-            DetailItem detailItem = new DetailItem("Callsign:", callsign, "GUFI:", gufi, "LAT:", lat, "LNG:", lng);
+
+            if (CurrentData.Instance.flightplans.containsKey(gufiKey))
+            {
+                callsign = CurrentData.Instance.flightplans.get(gufiKey).message.callsign;
+            }
+            DetailItem detailItem = new DetailItem(callsign, "", "GUFI:", gufi, "LAT:", lat, "LNG:", lng);
             detailItems.add(detailItem);
         }
 
