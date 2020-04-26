@@ -130,23 +130,15 @@ public class MainActivity extends AppCompatActivity {
         isWebSocketActive = false;
     }
 
-    public void MessageProcessingComplete(boolean isUpdateForFlightPlans,
-                                          boolean isUpdateForAircraft,
-                                          boolean isNewAircraft)
+    public void NewFlightPlanMessageProcessed(String gufi)
     {
-        if (isUpdateForFlightPlans)
-        {
-            fragmentMap.DrawFlightPlans();
-        }
-
-        if (isUpdateForAircraft)
-        {
-            fragmentMap.DrawAircraft();
-            fragmentDetails.UpdateDetails();
-        }
+        fragmentMap.DrawFlightPlans(gufi);
     }
 
-
+    public void NewAircraftPositionMessageProcessed(String gufi)
+    {
+        fragmentMap.DrawAircraft(gufi);
+    }
 
     public void OnWebSocketClose()
     {

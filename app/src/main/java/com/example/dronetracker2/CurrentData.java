@@ -20,17 +20,12 @@ public class CurrentData {
     public void ProcessNewMessages(String rawMessage)
     {
         Gson gson = new GsonBuilder().create();
-        MessageWrapperOperation messageWrapperAolFlightPlan = new MessageWrapperOperation();
-        MessageWrapperPosition messageWrapperAolPosition = new MessageWrapperPosition();
-
-        boolean isUpdateForFlightPlans = false;
-        boolean isUpdateForAircraft = false;
-        boolean isNewAircraft = false;
+        MessageWrapperOperation messageWrapperAolFlightPlan;
+        MessageWrapperPosition messageWrapperAolPosition;
 
         try {
             messageWrapperAolFlightPlan = gson.fromJson(rawMessage, MessageWrapperOperation.class);
             String gufi = messageWrapperAolFlightPlan.MessageAolFlightPlan.gufi;
-            isUpdateForFlightPlans = true;
             if (flightplans.containsKey(gufi))
             {
                 FlightPlan oldFlightPlan = flightplans.get(gufi);
@@ -41,13 +36,13 @@ public class CurrentData {
                 FlightPlan newFlightPlan = new FlightPlan(messageWrapperAolFlightPlan.MessageAolFlightPlan);
                 flightplans.put(gufi, newFlightPlan);
             }
+            mainActivity.NewFlightPlanMessageProcessed(gufi);
         } catch (Exception e){
         }
 
         try {
             messageWrapperAolPosition = gson.fromJson(rawMessage, MessageWrapperPosition.class);
             String gufi = messageWrapperAolPosition.MessageAolPosition.gufi;
-            isUpdateForAircraft = true;
             if (aircraft.containsKey(gufi))
             {
                 Aircraft oldAircraft = aircraft.get(gufi);
@@ -55,13 +50,12 @@ public class CurrentData {
             }
             else
             {
-                isNewAircraft = true;
                 Aircraft newAircraft = new Aircraft(messageWrapperAolPosition.MessageAolPosition);
                 aircraft.put(gufi, newAircraft);
             }
+
+            mainActivity.NewAircraftPositionMessageProcessed(gufi);
         } catch (Exception e) {
         }
-
-        mainActivity.MessageProcessingComplete(isUpdateForFlightPlans, isUpdateForAircraft, isNewAircraft);
     }
 }
