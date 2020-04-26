@@ -38,9 +38,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.HashMap;
 import java.util.List;
+
+import static java.lang.Math.atan2;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private MapViewModel mapViewModel;
@@ -50,7 +53,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
     private GoogleMap gMap;
     private boolean isMapReady = false;
     private HashMap<String, Marker> aircraftMarkers = new HashMap<>();
-    private boolean isLockedOntoAircraft;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -118,35 +120,27 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         isMapReady = true;
     }
 
-    public void DrawFlightPlans() {
+    public void DrawFlightPlans(String gufi) {
         if (!isMapReady)
             return;
 
-        for (String gufi : CurrentData.Instance.flightplans.keySet()) {
-            for (OperationVolume operationVolume : CurrentData.Instance.flightplans.get(gufi).message.operation_volumes)
-            {
-                FGObject flightGeography = operationVolume.flight_geography;
-                List<List<List<Double>>> coordinates = flightGeography.coordinates;
-                PolygonOptions poly = new PolygonOptions();
-                poly.fillColor(Color.GRAY);
+        for (OperationVolume operationVolume : CurrentData.Instance.flightplans.get(gufi).message.operation_volumes) {
+            FGObject flightGeography = operationVolume.flight_geography;
+            List<List<List<Double>>> coordinates = flightGeography.coordinates;
+            PolygonOptions poly = new PolygonOptions();
+            poly.fillColor(Color.GRAY);
 
-                for (List<Double> coordinate : coordinates.get(0))
-                {
-                    double latitude = coordinate.get(1);
-                    double longitude = coordinate.get(0);
-                    LatLng latLng = new LatLng(latitude, longitude);
-                    poly.add(latLng);
-                }
-                gMap.addPolygon(poly);
+            for (List<Double> coordinate : coordinates.get(0)) {
+                double latitude = coordinate.get(1);
+                double longitude = coordinate.get(0);
+                LatLng latLng = new LatLng(latitude, longitude);
+                poly.add(latLng);
             }
+            gMap.addPolygon(poly);
         }
     }
 
     public void LockOntoAircraft(DetailItem detailItem) {
-        isLockedOntoAircraft = true;
-        Log.d("WS", detailItem.getLatPlaceholder());
-        Log.d("WS", detailItem.getLngPlaceholder());
-
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(Double.parseDouble(detailItem.getLatPlaceholder()),
                                    Double.parseDouble(detailItem.getLngPlaceholder())))
@@ -155,33 +149,48 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, GoogleM
         gMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    public void DrawAircraft() {
+    public void DrawAircraft(String gufi) {
         if (!isMapReady)
             return;
 
-        for (String gufi : CurrentData.Instance.aircraft.keySet()) {
-            BitmapDescriptor bitmapDescriptor = bitmapDescriptorFromVector(getActivity(), R.drawable.ic_flight_black_24dp);
+        List<Double> coordinate = CurrentData.Instance.aircraft.get(gufi).message.lla;
+        double latitude = coordinate.get(0);
+        double longitude = coordinate.get(1);
+        LatLng newLatLng = new LatLng(latitude, longitude);
 
-            List<Double> coordinate = CurrentData.Instance.aircraft.get(gufi).message.lla;
-            double latitude = coordinate.get(0);
-            double longitude = coordinate.get(1);
-            LatLng latLng = new LatLng(latitude, longitude);
+        if (aircraftMarkers.containsKey(gufi))
+        {
+            LatLng oldLatLng = aircraftMarkers.get(gufi).getPosition();
+            float heading = (float)SphericalUtil.computeHeading(oldLatLng, newLatLng);
+            aircraftMarkers.get(gufi).setRotation(heading);
+            Log.d("WS", "" + gufi + ": old: " + oldLatLng + ", new: " + newLatLng + ", heading: " + heading);
 
-            if (aircraftMarkers.containsKey(gufi))
-            {
-                aircraftMarkers.get(gufi).setPosition(latLng);
-            }
-            else
-            {
-                String callsign = "<empty>";
-                if (CurrentData.Instance.flightplans.containsKey(gufi))
-                {
-                    callsign = CurrentData.Instance.flightplans.get(gufi).message.callsign;
-                }
-                Marker newMarker = gMap.addMarker(new MarkerOptions().position(latLng).icon(bitmapDescriptor).title(callsign));
-                aircraftMarkers.put(gufi, newMarker);
-            }
+            aircraftMarkers.get(gufi).setPosition(newLatLng);
         }
+        else
+        {
+            String callsign = "<empty>";
+            if (CurrentData.Instance.flightplans.containsKey(gufi))
+            {
+                callsign = CurrentData.Instance.flightplans.get(gufi).message.callsign;
+            }
+            BitmapDescriptor bitmapDescriptor = bitmapDescriptorFromVector(getActivity(), R.drawable.ic_flight_black_24dp);
+            Marker newMarker = gMap.addMarker(new MarkerOptions().position(newLatLng).icon(bitmapDescriptor).title(callsign));
+            aircraftMarkers.put(gufi, newMarker);
+        }
+    }
+
+    private float degreesFromCoordinate(LatLng latlngOld, LatLng latlngNew) {
+
+        double deltaLng = latlngNew.longitude - latlngOld.longitude;
+        double lat1 = latlngOld.latitude;
+        double lat2 = latlngNew.latitude;
+
+        double angle = Math.atan2(Math.sin(deltaLng) * Math.cos(lat2),
+                Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) *
+                        Math.cos(lat2) * Math.cos(deltaLng));
+
+        return (float)Math.toDegrees(angle);
     }
 
     public void EraseAll()
