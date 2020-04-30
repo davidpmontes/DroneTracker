@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
     public void NewAircraftPositionMessageProcessed(String gufi)
     {
         fragmentMap.DrawAircraft(gufi);
+        fragmentDetails.UpdateDetails();
     }
 
     public void OnWebSocketClose()
